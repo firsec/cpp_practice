@@ -1,0 +1,75 @@
+#include <iostream>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+class Orienteering {
+  public:
+    void main();
+    bool parseData();
+    void printDataArray();
+    void wavePropagate();
+    void searchPath();
+    void initArray();
+  private:
+    vector<vector<int> > dataArray_;
+    vector<pair<int,int> > checkPoints_; //the 1st and 2nd is S and G, others are real checkpoints.
+};
+
+void Orienteering::initArray(int width, int height) {
+  dataArray_.clear();
+  vector<int> tmp(width,0);
+  for(int i = 0; i < height; ++i) {
+    dataArray_.push_back(tmp);
+  }
+}
+
+bool Orienteering::parseData() {
+  int width, height;
+  cin>>width>>height;
+  if(!(width > 0 && height >0)) {
+    cout<<"Error: bad width or height"<<endl;
+    return false;
+  }
+  cout<<"width "<<width<<", height "<<height<<endl;
+  initArray(width, height);
+  checkPoints_.clear();
+  checkPoints_.push_pack(make_pair(-1,-1)); //checkPoints_[0]  S
+  checkPoints_.push_pack(make_pair(-1,-1)); //checkPoints_[1]  G
+
+  for(int i = 0; i<height; ++i) {
+    string line;
+    cin>>line;
+    cout<<"line "<<i<<" is: "<<line<<endl;
+    string::iterator strPos = line.beign();
+    if(line[0]!="#" || line[line.size()-1]!="#" || line.size() != width)
+      return false;
+    for(int j = 0; j < line.size(); ++j) {
+      if(i == 0 || i == height - 1) {
+        if(line[j] != "#")
+          return false;
+      }
+      switch(line[j]) {
+        case "#": dataArray[i][j] = -1;break;
+        case "@": checkPoints_.push_back(make_pair(i,j));break;
+        case "S"; checkPoints_[0].swap(make_pair(i,j));break;
+        case "G"; checkPoints_[1].swap(make_pair(i,j));break;
+      }
+    }      
+  }
+  if(checkPoints_[0] == pair(-1,-1) || checkPoints_[1] == pair(-1,-1))
+    return false;
+  return true;
+}
+
+void Orienteering::main() {
+  //implementation
+
+  if(!parseData()) {
+    cout<<"Data input Error!"<<endl;
+    return -1;
+  }
+
+  return;
+}
